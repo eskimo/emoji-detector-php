@@ -23,11 +23,14 @@ function detect_emoji($string) {
   if(!isset($regexp2))
     $regexp2 = _load_regexp2();
 
+  $data1 = [];
   if(preg_match_all($regexp1, $string, $matches, PREG_OFFSET_CAPTURE)) {
-    $data1 = handleMatches($matches);
+    $data1 = handleMatches($map, $string, $matches);
   }
+
+  $data2 = [];
   if(preg_match_all($regexp2, $string, $matches, PREG_OFFSET_CAPTURE)) {
-    $data2 = handleMatches($matches);
+    $data2 = handleMatches($map, $string, $matches);
   }
 
   $data = array_merge($data1, $data2);
@@ -38,7 +41,7 @@ function detect_emoji($string) {
   return $data;
 }
 
-function handleMatches($matches) {
+function handleMatches($map, $string, $matches) {
     $data = [];
     
     $lastGOffset = 0;
