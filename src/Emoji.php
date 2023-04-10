@@ -24,11 +24,13 @@ function detect_emoji($string) {
     $regexp2 = _load_regexp2();
 
   if(preg_match_all($regexp1, $string, $matches, PREG_OFFSET_CAPTURE)) {
-    handleMatches($matches);
+    $data1 = handleMatches($matches);
   }
   if(preg_match_all($regexp2, $string, $matches, PREG_OFFSET_CAPTURE)) {
-    handleMatches($matches);
+    $data2 = handleMatches($matches);
   }
+
+  $data = array_merge($data1, $data2);
 
   if($prevencoding)
     mb_internal_encoding($prevencoding);
@@ -85,6 +87,8 @@ function handleMatches($matches) {
         'grapheme_offset' => $gOffset,  // The grapheme-based position of the emoji in the string
       );
     }
+
+    return $data;
 }
 
 function get_first_emoji($string) {
