@@ -22,17 +22,18 @@ foreach ($emojis["emoji"] as $key => $value) {
   $hex = formatHex($emojis["hex"][$key]);
   $name = formatName($emojis["name"][$key]);
   $qualified = $emojis["qualified"][$key];
-  $map[$hex] = $name;
+  $map[(string)$hex] = $name;
 }
 
 file_put_contents(dirname(__FILE__).'/../src/map.json', json_encode($map, JSON_PRETTY_PRINT));
 
 $keys = array_keys($map);
+
 usort($keys,function($a,$b){
     return strlen($b)-strlen($a);
 });
 
-$chunks = array_chunk($keys, 2);
+$chunks = array_chunk($keys, round(count($keys) / 2));
 $regex1 = preg_replace('/\-?([0-9a-f]+)/i', '\x{$1}', implode('|', $chunks[0]));
 $regex2 = preg_replace('/\-?([0-9a-f]+)/i', '\x{$1}', implode('|', $chunks[1]));
 
