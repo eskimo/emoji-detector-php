@@ -39,6 +39,8 @@ function detect_emoji($string) {
 }
 
 function handleMatches($matches) {
+    $data = [];
+    
     $lastGOffset = 0;
     foreach($matches[0] as $match) {
       $ch = $match[0]; // the actual emoji char found by the regex, may be multiple bytes
