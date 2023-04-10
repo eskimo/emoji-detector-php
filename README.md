@@ -7,7 +7,17 @@ Installation
 ------------
 
 ```
-composer require p3k/emoji-detector
+{
+    "repositories": [
+        {
+            "url": "https://github.com/eskimo/emoji-detector-php.git",
+            "type": "git"
+        }
+    ],
+    "require": {
+        "eskimo/emoji-detector": "dev-main"
+    }
+}
 ```
 
 Or include `src/Emoji.php` in your project, and make sure the `map.json` and `regexp.json` files are available in the same folder as `Emoji.php`. You don't need any of the other files for use in your own projects.
@@ -138,8 +148,6 @@ $emoji = Emoji\is_single_emoji('😻🐈');
 
 License
 -------
-
-Copyright 2017-2022 by Aaron Parecki.
 
 Available under the MIT license.
 

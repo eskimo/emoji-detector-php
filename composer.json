@@ -3,12 +3,12 @@
   "description": "Detect and return all emoji found in a string",
   "type": "library",
   "license": "MIT",
-  "homepage": "https://github.com/aaronpk/emoji-detector-php",
+  "homepage": "https://github.com/eskimo/emoji-detector-php",
   "authors": [
     {
-      "name": "Aaron Parecki",
-      "email": "aaron@parecki.com",
-      "homepage": "https://aaronparecki.com/"
+      "name": "eskimo",
+      "email": "me@eskimo.dev",
+      "homepage": "https://eskimo.dev/"
     }
   ],
   "autoload": {
