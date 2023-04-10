@@ -31,6 +31,10 @@ $keys = array_keys($map);
 usort($keys,function($a,$b){
     return strlen($b)-strlen($a);
 });
-$all = preg_replace('/\-?([0-9a-f]+)/i', '\x{$1}', implode('|', $keys));
 
-file_put_contents(dirname(__FILE__).'/../src/regexp.json', json_encode($all));
+$chunks = array_chunk($keys, 2);
+$regex1 = preg_replace('/\-?([0-9a-f]+)/i', '\x{$1}', implode('|', $chunks[0]));
+$regex2 = preg_replace('/\-?([0-9a-f]+)/i', '\x{$1}', implode('|', $chunks[1]));
+
+file_put_contents(dirname(__FILE__).'/../src/regexp1.json', json_encode($regex1));
+file_put_contents(dirname(__FILE__).'/../src/regexp2.json', json_encode($regex2));

@@ -15,11 +15,28 @@ function detect_emoji($string) {
   if(!isset($map))
     $map = _load_map();
 
-  static $regexp;
-  if(!isset($regexp))
-    $regexp = _load_regexp();
+  static $regexp1;
+  if(!isset($regexp1))
+    $regexp1 = _load_regexp1();
 
-  if(preg_match_all($regexp, $string, $matches, PREG_OFFSET_CAPTURE)) {
+  static $regexp2;
+  if(!isset($regexp2))
+    $regexp2 = _load_regexp2();
+
+  if(preg_match_all($regexp1, $string, $matches, PREG_OFFSET_CAPTURE)) {
+    handleMatches($matches);
+  }
+  if(preg_match_all($regexp2, $string, $matches, PREG_OFFSET_CAPTURE)) {
+    handleMatches($matches);
+  }
+
+  if($prevencoding)
+    mb_internal_encoding($prevencoding);
+
+  return $data;
+}
+
+function handleMatches($matches) {
     $lastGOffset = 0;
     foreach($matches[0] as $match) {
       $ch = $match[0]; // the actual emoji char found by the regex, may be multiple bytes
@@ -68,12 +85,6 @@ function detect_emoji($string) {
         'grapheme_offset' => $gOffset,  // The grapheme-based position of the emoji in the string
       );
     }
-  }
-
-  if($prevencoding)
-    mb_internal_encoding($prevencoding);
-
-  return $data;
 }
 
 function get_first_emoji($string) {
@@ -131,8 +142,11 @@ function _load_map() {
   return json_decode(file_get_contents(dirname(__FILE__).'/map.json'), true);
 }
 
-function _load_regexp() {
-  return '/(?:' . json_decode(file_get_contents(dirname(__FILE__).'/regexp.json')) . ')/u';
+function _load_regexp1() {
+  return '/(?:' . json_decode(file_get_contents(dirname(__FILE__).'/regexp1.json')) . ')/u';
+}
+function _load_regexp2() {
+  return '/(?:' . json_decode(file_get_contents(dirname(__FILE__).'/regexp2.json')) . ')/u';
 }
 
 function uniord($c) {
