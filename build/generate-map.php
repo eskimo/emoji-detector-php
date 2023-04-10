@@ -1,38 +1,28 @@
 <?php
 // Build the mapping array of hex unicode code point lists to shortnames.
-// From Slack's emoji.json
-// https://raw.githubusercontent.com/iamcal/emoji-data/master/emoji_pretty.json
 
-$emoji_data = json_decode(file_get_contents('https://raw.githubusercontent.com/iamcal/emoji-data/master/emoji_pretty.json'), true);
+$emoji_data = file_get_contents('https://unicode.org/Public/emoji/15.0/emoji-test.txt');
+preg_match_all("/^(?<hex>[0-9A-F\s]+)\;\s+(?<qualified>[a-z\-]+)\s+# (?<emoji>.+?)\sE[0-9\.]+?\s(?<name>.+?)$/m", $emoji_data, $emojis);
+
+function formatHex($hex) {
+  $hex = trim($hex);
+  $hex = str_replace(" ", "-", $hex);
+  return $hex;
+}
+
+function formatName($name) {
+  $name = trim($name);
+  $name = str_replace(" ", "_", $name);
+  $name = strtolower($name);
+  return $name;
+}
 
 $map = [];
-
-foreach($emoji_data as $emoji) {
-  $short_name = $emoji['short_name'];
-
-  if(isset($emoji['non_qualified'])) {
-    $map[$emoji['non_qualified']] = $short_name;
-  }
-
-  // Slack changed flag-de shortname to de, but we still want to keep flag-de
-  // Most of the flag emojis are still flag-*, they only changed some of them
-  if(isset($emoji['short_names']) && in_array('flag-'.$short_name, $emoji['short_names'])) {
-    $short_name = 'flag-' . $short_name;
-  }
-
-  $map[$emoji['unified']] = $short_name;
-
-  if(isset($emoji['variations'])) {
-    foreach($emoji['variations'] as $var) {
-      $map[$var] = $short_name;
-    }
-  }
-
-  if(isset($emoji['skin_variations'])) {
-    foreach($emoji['skin_variations'] as $key=>$var) {
-      $map[$var['unified']] = $short_name;
-    }
-  }
+foreach ($emojis["emoji"] as $key => $value) {
+  $hex = formatHex($emojis["hex"][$key]);
+  $name = formatName($emojis["name"][$key]);
+  $qualified = $emojis["qualified"][$key];
+  $map[$hex] = $name;
 }
 
 file_put_contents(dirname(__FILE__).'/../src/map.json', json_encode($map, JSON_PRETTY_PRINT));
